@@ -11,6 +11,7 @@ window.onload = function() {
     let widthInBlocks = canvasWidth/blockSize;
     let heightInBlocks = canvasHeight/blockSize;
     let score;
+    let timeOut;
 
     init();
         
@@ -20,7 +21,10 @@ window.onload = function() {
         let canvas = document.createElement('canvas');
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
-        canvas.style.border = "1px solid";
+        canvas.style.border = "30px solid purple";
+        canvas.style.margin = "50px auto";
+        canvas.style.display = "block";
+        canvas.style.backgroundColor = "#ddd";
         document.body.appendChild(canvas);
         ctx = canvas.getContext('2d'); // Dessin en 2d
         snakee = new Snake([[6,4], [5,4], [4,4]], "right"); // Position de départ du snake
@@ -44,17 +48,27 @@ window.onload = function() {
             }
             // Coordonnées du rectangle     
             ctx.clearRect(0, 0, canvasWidth, canvasHeight); // Efface le rectangle
+            drawScore(); // Affiche le score à l'écran
             snakee.draw(); // Dessine le snake
             applee.draw(); // Dessine la pomme
-            drawScore(); // Affiche le score à l'écran
-            setTimeout(refreshCanvas, delay); // Update du canvas
+            timeOut = setTimeout(refreshCanvas, delay); // Update du canvas
         }
     }
     // Function game over
     function gameOver() {
         ctx.save();
-        ctx.fillText("GameOver", 5, 15);
-        ctx.fillText("Appuyez sur la touche espace pour rejouer", 5, 30);
+        ctx.font = "bold 50px sans-serif";
+        ctx.fillStyle = "#000";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle"
+        ctx.strokeStyle = "white";
+        let centreX = canvasWidth / 2;
+        let centreY = canvasHeight / 2;
+        ctx.strokeText("GameOver", centreX, centreY -180);
+        ctx.fillText("GameOver", centreX, centreY -180);
+        ctx.font = "bold 25px sans-serif";
+        ctx.strokeText("Appuyez sur la touche espace pour rejouer", centreX, centreY -120);
+        ctx.fillText("Appuyez sur la touche espace pour rejouer", centreX, centreY -120);
         ctx.restore();
     }
     // Function restart space
@@ -62,12 +76,19 @@ window.onload = function() {
         snakee = new Snake([[6,4], [5,4], [4,4]], "right"); 
         applee = new Apple([10,10]);
         score = 0;
+        clearTimeout(timeOut);
         refreshCanvas();
     }
     // On affiche le score à l'écran
     function drawScore() {
         ctx.save();
-        ctx.fillText(score.toString(), 5, canvasHeight -5);
+        ctx.font = "bold 100px sans-serif";
+        ctx.fillStyle = "gray";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle"
+        let centreX = canvasWidth / 2;
+        let centreY = canvasHeight / 2;
+        ctx.fillText(score.toString(), centreX, centreY);
         ctx.restore();
     }
     // Function qui dessine le cadrillage du canvas et dessine le snake
