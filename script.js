@@ -5,7 +5,7 @@ window.onload = function() {
     let canvasHeight = 600;
     let blockSize = 30;
     let ctx;
-    let delay = 100;
+    let delay = 125;
     let snakee;
 
     init();
@@ -53,9 +53,64 @@ window.onload = function() {
         // Méthode pour faire avancé le snake
         this.advance = function() {
             let nextPosition = this.body[0].slice();
-            nextPosition[0] += 1;
+            switch(this.direction) {
+                case "left":
+                    nextPosition[0] -= 1;
+                    break;
+                case "right":
+                    nextPosition[0] += 1;
+                    break;
+                case "down":
+                    nextPosition[1] += 1;
+                    break;
+                case "up":
+                    nextPosition[1] -= 1;
+                    break;
+                default:
+                    throw("Invalid Direction");                
+            }
             this.body.unshift(nextPosition);
             this.body.pop();
         };
+        this.setDirection = function(newDirection) {
+            let allowedDirections;
+            switch(this.direction) {
+                case "left":
+                case "right":
+                    allowedDirections = ["up", "down"];
+                    break;
+                case "down":
+                case "up":
+                    allowedDirections = ["left", "right"];
+                    break;
+                default:
+                    throw("Invalid Direction");    
+            }
+            if (allowedDirections.indexOf(newDirection) > -1) {
+                this.direction = newDirection;
+            }
+        };
+    }
+    // Evènement lors de l'appuie d'une touche sur le clavier
+    document.onkeydown = function handleKeyDown (e) {
+        let key = e.keyCode;
+        let newDirection;
+        switch(key) {
+            case 37:
+                newDirection = "left";
+                break;
+            case 38:
+                newDirection = "up";
+                break;
+            case 39:
+                newDirection = "right";
+                break;
+            case 40:
+                newDirection = "down";
+                break;
+            default:
+                return; 
+        }
+        snakee.setDirection(newDirection);
     }
 }
